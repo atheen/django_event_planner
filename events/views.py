@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
 from django.contrib import messages
+from datetime import datetime
 
-from .forms import UserSignup, UserLogin
+from .forms import UserSignup, UserLogin, EventForm, BookEventForm
 from .models import Event,Attendee
 
 def home(request):
@@ -72,3 +73,68 @@ def dashboard(request):
         "attended_events":Attendee.objects.filter(user=request.user),
     }
     return render(request,'dashboard.html',context)
+
+def event_details(request,event_id):
+    event_obj = Event.objects.get(id=event_id)
+    context = {
+        "event": event_obj,
+        "attendees": event_obj.attendees.all()
+    }
+    return render(request,'event_details.html',context)
+
+def event_update(request,event_id):
+    event_obj = Event.objects.get(id=event_id)
+    form = EventForm(instance=event_obj)
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=event_obj)
+        if form.is_valid():
+            form.save()
+            return redirect('event-details',event_id)
+    context = {
+        "event": event_obj,
+        "form": form,
+    }
+    return render(request, 'event_update.html', context)
+
+def events_list(request):
+    if request.user.is_anonymous:
+        return redirect('login')
+    context = {
+        "events": Event.objects.filter(date__gte=datetime.today())
+    }
+    return render(request, 'events_list.html',context)
+
+def create_event(request):
+    if request.user.is_anonymous:
+        return redirect('login')
+    form = EventForm()
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.planner = request.user
+            obj.save()
+            return redirect('dashboard')
+    context = {
+        "form": form,
+    }
+    return render(request, 'create_event.html',context)
+
+def book_event(request, event_id):
+    if request.user.is_anonymous:
+        return redirect('login')
+    event_obj = Event.objects.get(id=event_id)
+    form = BookEventForm()
+    if request.method == "POST":
+        form = BookEventForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.event = event_obj
+            obj.user = request.user
+            obj.save()
+            return redirect('dashboard')
+    context = {
+        "event": event_obj,
+        "form": form
+    }
+    return render(request, 'book_event.html', context)

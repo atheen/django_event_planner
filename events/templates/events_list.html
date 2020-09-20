@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead text-center text-white">
+  <div class="masthead-content">
+    <div class="container">
+      {% if request.user.is_anonymous %}
+        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
+      {% else %}
+      <!-- PLANNED EVENTS TABLE -->
+      <br>
+      <h2 class="masthead-subheading mb-0">UPCOMING EVENTS</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">EVENT</th>
+              <th scope="col">DATE</th>
+              <th scope="col">REMAINING TICKETS</th>
+              <th scope="col">PLANNER</th>
+              <th scope="col">BOOK</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+              <tr>
+                <th scope="row">{{event.name}}</th>
+                <td>{{event.date}}</td>
+                <td>{{event.tickets}}</td>
+                <td>{{event.planner}}</td>
+                <td><a href="{% url 'book-event' event.id %}" class="btn btn-light btn-block rounded-pill">Book</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+
+
+{% endblock %}
