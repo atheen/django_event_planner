@@ -7,6 +7,31 @@
       {% if request.user.is_anonymous %}
         <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
       {% else %}
+
+      <!-- PLANNED EVENTS TABLE -->
+      <br>
+      <h2 class="masthead-subheading mb-0">PROFILE</h2>
+      <a href="{% url 'profile-update' request.user.id %}" class="btn btn-light btn-xl rounded-pill mt-2">Update Profile</a>
+      <table class="table mt-2">
+        <thead>
+          <tr>
+            <th scope="col">USERNAME</th>
+            <th scope="col">FIRST NAME</th>
+            <th scope="col">LAST NAME</th>
+            <th scope="col">EMAIL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">{{request.user.username}}</th>
+            <td>{{request.user.first_name}}</td>
+            <td>{{request.user.last_name}}</td>
+            <td>{{request.user.email}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+
       <!-- PLANNED EVENTS TABLE -->
       <br>
       <h2 class="masthead-subheading mb-0">PLANNED EVENTS</h2>
@@ -60,7 +85,6 @@
               {% endfor %}
             </tbody>
           </table>
-        <a href="{% url 'profile-update' request.user.id %}" class="btn btn-primary btn-xl rounded-pill mt-5">Update Profile</a>
       {% endif %}
     </div>
   </div>
