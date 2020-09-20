@@ -18,6 +18,12 @@ class UserLogin(forms.Form):
     password = forms.CharField(required=True, widget=forms.PasswordInput())
 
 
+class ProfileUpdate(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event

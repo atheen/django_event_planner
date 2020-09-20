@@ -3,8 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.views import View
 from django.contrib import messages
 from datetime import datetime
+from django.contrib.auth.models import User
 
-from .forms import UserSignup, UserLogin, EventForm, BookEventForm
+from .forms import UserSignup, UserLogin, EventForm, BookEventForm, ProfileUpdate
 from .models import Event,Attendee
 
 def home(request):
@@ -66,6 +67,26 @@ class Logout(View):
 
 
 #STARTED
+
+def update_profile(request,user_id):
+    user_obj = User.objects.get(id=user_id)
+    if request.user != user_obj:
+        messages.success(request, "You have no access.")
+    else:
+        form = ProfileUpdate(instance=user_obj)
+        if request.method == 'POST':
+            form = ProfileUpdate(request.POST, instance=user_obj)
+            if form.is_valid():
+                form.save()
+                return redirect('dashboard')
+    context = {
+        "user": user_obj,
+        "form": form
+    }
+    return render(request, 'profile_update.html', context)
+
+
+
 
 def dashboard(request):
     context = {
