@@ -1,0 +1,49 @@
+{%  extends "base.html" %}
+
+{% block content %}
+<br>
+<div class="row">
+  <h1>PLANNED EVENTS</h1>
+    {% for event in planned_events %}
+    <div class="col-md-4">
+        <div class="card my-card">
+          <div class="card-body">
+            <h5 class="card-title">{{event.name}}</h5>
+            <p class="card-text">{{event.date}}</p>
+            <p class="card-text">{{event.tickets}}</p>
+            <p class="card-text">{{event.planner}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
+                <a href=# class="btn btn-outline-dark btn-block">View</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<br>
+<div class="row">
+  <h1>ATTENDED EVENTS</h1>
+    {% for event in attended_events.event %}
+    <div class="col-md-4">
+        <div class="card my-card">
+          <div class="card-body">
+            <h5 class="card-title">{{event.name}}</h5>
+            <p class="card-text">{{event.date}}</p>
+            <p class="card-text">{{attended_events.reserved_tickets}}</p>
+            <p class="card-text">{{event.planner}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
+                <a href=# class="btn btn-outline-dark btn-block">View</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}

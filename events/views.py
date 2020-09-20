@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
+from django.contrib import messages
+
 from .forms import UserSignup, UserLogin
+from .models import Event,Attendee
 
 def home(request):
     return render(request, 'home.html')
@@ -59,3 +62,13 @@ class Logout(View):
         messages.success(request, "You have successfully logged out.")
         return redirect("login")
 
+
+
+#STARTED
+
+def dashboard(request):
+    context = {
+        "planned_events":Event.objects.filter(planner=request.user),
+        "attended_events":Attendee.objects.filter(user=request.user),
+    }
+    return render(request,'dashboard.html',context)

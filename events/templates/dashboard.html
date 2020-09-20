@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<header class="masthead text-center text-white">
+  <div class="masthead-content">
+    <div class="container">
+      <!-- <h1 class="masthead-heading mb-0">All the events,</h1>
+      <h2 class="masthead-subheading mb-0">You could ever want...</h2> -->
+      {% if request.user.is_anonymous %}
+        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
+      {% else %}
+      <!-- PLANNED EVENTS TABLE -->
+      <br>
+      <h2 class="masthead-subheading mb-0">PLANNED EVENTS</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">EVENT</th>
+              <th scope="col">DATE</th>
+              <th scope="col">TOTAL NUMBER OF TICKETS</th>
+              <th scope="col">REMAINING NUMBER OF TICKETS</th>
+              <th scope="col">PLANNER</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in planned_events %}
+              <tr>
+                <th scope="row">{{event.name}}</th>
+                <td>{{event.date}}</td>
+                <td>{{event.tickets}}</td>
+                <td>{{event.tickets}}</td>
+                <td>{{event.planner}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- ATTENDED EVENTS TABLE -->
+        <br>
+        <br>
+        <h2 class="masthead-subheading mb-0">ATTENDED EVENTS</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">EVENT</th>
+                <th scope="col">DATE</th>
+                <th scope="col">NUMBER OF TICKETS</th>
+                <th scope="col">PLANNER</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for event in attended_events %}
+                <tr>
+                  <th scope="row">{{event.event.name}}</th>
+                  <td>{{event.event.date}}</td>
+                  <td>{{event.reserved_tickets}}</td>
+                  <td>{{event.event.planner}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        <!-- <a href="#" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a> -->
+      {% endif %}
+    </div>
+  </div>
+  <!-- <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div> -->
+</header>
+
+
+
+{% endblock %}
