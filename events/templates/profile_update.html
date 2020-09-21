@@ -13,7 +13,7 @@
         <hr>
 
         <br>
-        <form action="{% url 'profile-update' user.id %}" method="POST">
+        <form action="{% url 'profile-update' %}" method="POST">
           {% csrf_token %}
           {{form|crispy}}
           <input type="submit" vlaue="UPDATE" class="btn btn-primary btn-xl rounded-pill mt-5">

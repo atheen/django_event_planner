@@ -4,6 +4,8 @@ from django.views import View
 from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.models import User
+from django_searchbar.utils import SearchBar
+from django.db.models import Q
 
 from .forms import UserSignup, UserLogin, EventForm, BookEventForm, ProfileUpdate
 from .models import Event,Attendee
@@ -68,8 +70,8 @@ class Logout(View):
 
 #STARTED
 
-def update_profile(request,user_id):
-    user_obj = User.objects.get(id=user_id)
+def update_profile(request):
+    user_obj = User.objects.get(id=request.user.id)
     if request.user != user_obj:
         messages.success(request, "You have no access.")
     else:
@@ -86,8 +88,6 @@ def update_profile(request,user_id):
     return render(request, 'profile_update.html', context)
 
 
-
-
 def dashboard(request):
     context = {
         "planned_events":Event.objects.filter(planner=request.user),
@@ -98,8 +98,7 @@ def dashboard(request):
 def event_details(request,event_id):
     event_obj = Event.objects.get(id=event_id)
     context = {
-        "event": event_obj,
-        "attendees": event_obj.attendees.all()
+        "event": event_obj
     }
     return render(request,'event_details.html',context)
 
@@ -109,7 +108,9 @@ def event_update(request,event_id):
     if request.method == "POST":
         form = EventForm(request.POST, instance=event_obj)
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.available_tickets = obj.tickets - obj.booked_tickets
+            obj.save()
             return redirect('event-details',event_id)
     context = {
         "event": event_obj,
@@ -120,8 +121,16 @@ def event_update(request,event_id):
 def events_list(request):
     if request.user.is_anonymous:
         return redirect('login')
+    queryset_list = Event.objects.filter(date__gte=datetime.today(),available_tickets__gt=0)
+    query = request.GET.get("q")
+    if query:
+        queryset_list = queryset_list.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(planner__username__icontains=query)
+            ).distinct()
     context = {
-        "events": Event.objects.filter(date__gte=datetime.today())
+        "events": queryset_list
     }
     return render(request, 'events_list.html',context)
 
@@ -134,6 +143,7 @@ def create_event(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.planner = request.user
+            obj.available_tickets = obj.tickets - obj.booked_tickets
             obj.save()
             return redirect('dashboard')
     context = {
@@ -150,10 +160,17 @@ def book_event(request, event_id):
         form = BookEventForm(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.event = event_obj
-            obj.user = request.user
-            obj.save()
-            return redirect('dashboard')
+            if event_obj.available_tickets >= obj.reserved_tickets:
+                obj.event = event_obj
+                obj.user = request.user
+                event_obj.available_tickets -= obj.reserved_tickets
+                event_obj.booked_tickets += obj.reserved_tickets
+                event_obj.save()
+                obj.save()
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Event is fully booked.")
+                return redirect('events-list')
     context = {
         "event": event_obj,
         "form": form

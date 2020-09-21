@@ -7,6 +7,8 @@ class Event(models.Model):
     description = models.TextField()
     date = models.DateField()
     tickets = models.PositiveIntegerField()
+    available_tickets = models.PositiveIntegerField()
+    booked_tickets = models.PositiveIntegerField(default=0)
     planner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

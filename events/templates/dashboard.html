@@ -11,7 +11,7 @@
       <!-- PLANNED EVENTS TABLE -->
       <br>
       <h2 class="masthead-subheading mb-0">PROFILE</h2>
-      <a href="{% url 'profile-update' request.user.id %}" class="btn btn-light btn-xl rounded-pill mt-2">Update Profile</a>
+      <a href="{% url 'profile-update' %}" class="btn btn-light btn-xl rounded-pill mt-2">Update Profile</a>
       <table class="table mt-2">
         <thead>
           <tr>
@@ -41,7 +41,8 @@
               <th scope="col">EVENT</th>
               <th scope="col">DATE</th>
               <th scope="col">TOTAL TICKETS</th>
-              <th scope="col">REMAINING TICKETS</th>
+              <th scope="col">BOOKED TICKETS</th>
+              <th scope="col">AVAILABLE TICKETS</th>
               <th scope="col">PLANNER</th>
               <th scope="col">DETAILS</th>
             </tr>
@@ -52,7 +53,8 @@
                 <th scope="row">{{event.name}}</th>
                 <td>{{event.date}}</td>
                 <td>{{event.tickets}}</td>
-                <td>{{event.tickets}}</td>
+                <td>{{event.booked_tickets}}</td>
+                <td>{{event.available_tickets}}</td>
                 <td>{{event.planner}}</td>
                 <td><a href="{% url 'event-details' event.id %}" class="btn btn-light btn-block rounded-pill">Details</a></td>
               </tr>

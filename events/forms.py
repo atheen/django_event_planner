@@ -27,7 +27,7 @@ class ProfileUpdate(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ['planner']
+        exclude = ['planner','available_tickets']
         # fields = "__all__"
 
 class BookEventForm(forms.ModelForm):

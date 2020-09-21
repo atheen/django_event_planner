@@ -7,7 +7,16 @@
       {% if request.user.is_anonymous %}
         <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
       {% else %}
-      <!-- PLANNED EVENTS TABLE -->
+
+
+      <form method='GET' action=''>
+        <input type='text' name='q' placeholder='Search...' vlaue='{{ request.get.q }}' class="rounded-pill text-center" style="width: 100%; height:50px"/>
+        <input type='submit' value='Search' class="btn btn-light btn-block rounded-pill mt-2"/>
+      </form>
+
+
+
+      <!-- EVENTS TABLE -->
       <br>
       <h2 class="masthead-subheading mb-0">UPCOMING EVENTS</h2>
         <table class="table">
@@ -25,7 +34,7 @@
               <tr>
                 <th scope="row">{{event.name}}</th>
                 <td>{{event.date}}</td>
-                <td>{{event.tickets}}</td>
+                <td>{{event.available_tickets}}</td>
                 <td>{{event.planner}}</td>
                 <td><a href="{% url 'book-event' event.id %}" class="btn btn-light btn-block rounded-pill">Book</a></td>
               </tr>

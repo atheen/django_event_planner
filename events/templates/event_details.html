@@ -27,7 +27,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for attendee in attendees %}
+              {% for attendee in event.attendees.all %}
                 <tr>
                   <th scope="row">{{attendee.user.username}}</th>
                   <td>{{attendee.reserved_tickets}}</td>
