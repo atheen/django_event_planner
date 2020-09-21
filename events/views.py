@@ -4,7 +4,6 @@ from django.views import View
 from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.models import User
-from django_searchbar.utils import SearchBar
 from django.db.models import Q
 
 from .forms import UserSignup, UserLogin, EventForm, BookEventForm, ProfileUpdate
