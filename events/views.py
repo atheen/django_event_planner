@@ -5,6 +5,8 @@ from django.contrib import messages
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .forms import UserSignup, UserLogin, EventForm, BookEventForm, ProfileUpdate
 from .models import Event,Attendee
@@ -69,6 +71,22 @@ class Logout(View):
 
 #STARTED
 
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated.')
+            return redirect('profile-update')
+        else:
+            messages.error(request, 'Please correct the error.')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {'form':form}
+    return render(request, 'change_password.html',context)
+
+
 def update_profile(request):
     user_obj = User.objects.get(id=request.user.id)
     if request.user != user_obj:
@@ -78,7 +96,9 @@ def update_profile(request):
         if request.method == 'POST':
             form = ProfileUpdate(request.POST, instance=user_obj)
             if form.is_valid():
-                form.save()
+                user = form.save(commit=False)
+                user.set_password(user.password)
+                user.save()
                 return redirect('dashboard')
     context = {
         "user": user_obj,
@@ -88,6 +108,8 @@ def update_profile(request):
 
 
 def dashboard(request):
+    if request.user.is_anonymous:
+        return redirect('login')
     context = {
         "planned_events":Event.objects.filter(planner=request.user),
         "attended_events":Attendee.objects.filter(user=request.user),
@@ -120,7 +142,7 @@ def event_update(request,event_id):
 def events_list(request):
     if request.user.is_anonymous:
         return redirect('login')
-    queryset_list = Event.objects.filter(date__gte=datetime.today(),available_tickets__gt=0)
+    queryset_list = Event.objects.filter(date__gte=datetime.today()).order_by('-available_tickets')
     query = request.GET.get("q")
     if query:
         queryset_list = queryset_list.filter(

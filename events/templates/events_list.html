@@ -36,7 +36,11 @@
                 <td>{{event.date}}</td>
                 <td>{{event.available_tickets}}</td>
                 <td>{{event.planner}}</td>
-                <td><a href="{% url 'book-event' event.id %}" class="btn btn-light btn-block rounded-pill">Book</a></td>
+                {% if event.available_tickets == 0 %}
+                  <td><button type="button" class="btn btn-light btn-block rounded-pill" disabled>Full</button></td>
+                {% else %}
+                  <td><a href="{% url 'book-event' event.id %}" class="btn btn-light btn-block rounded-pill">Book</a></td>
+                {% endif %}
               </tr>
             {% endfor %}
           </tbody>
