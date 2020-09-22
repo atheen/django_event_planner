@@ -72,6 +72,8 @@ class Logout(View):
 #STARTED
 
 def change_password(request):
+    if request.user.is_anonymous:
+        return redirect('login')
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -88,9 +90,11 @@ def change_password(request):
 
 
 def update_profile(request):
+    if request.user.is_anonymous:
+        return redirect('login')
     user_obj = User.objects.get(id=request.user.id)
     if request.user != user_obj:
-        messages.success(request, "You have no access.")
+        messages.error(request, "You have no access.")
     else:
         form = ProfileUpdate(instance=user_obj)
         if request.method == 'POST':
@@ -117,27 +121,39 @@ def dashboard(request):
     return render(request,'dashboard.html',context)
 
 def event_details(request,event_id):
+    if request.user.is_anonymous:
+        return redirect('login')
     event_obj = Event.objects.get(id=event_id)
-    context = {
-        "event": event_obj
-    }
-    return render(request,'event_details.html',context)
+    user_obj = event_obj.planner
+    if request.user != user_obj:
+        messages.error(request, "You have no access.")
+    else:
+        context = {
+            "event": event_obj
+        }
+        return render(request,'event_details.html',context)
 
 def event_update(request,event_id):
+    if request.user.is_anonymous:
+        return redirect('login')
     event_obj = Event.objects.get(id=event_id)
-    form = EventForm(instance=event_obj)
-    if request.method == "POST":
-        form = EventForm(request.POST, instance=event_obj)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.available_tickets = obj.tickets - obj.booked_tickets
-            obj.save()
-            return redirect('event-details',event_id)
-    context = {
-        "event": event_obj,
-        "form": form,
-    }
-    return render(request, 'event_update.html', context)
+    user_obj = event_obj.planner
+    if request.user != user_obj:
+        messages.error(request, "You have no access.")
+    else:
+        form = EventForm(instance=event_obj)
+        if request.method == "POST":
+            form = EventForm(request.POST, instance=event_obj)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.available_tickets = obj.tickets - obj.booked_tickets
+                obj.save()
+                return redirect('event-details',event_id)
+        context = {
+            "event": event_obj,
+            "form": form,
+        }
+        return render(request, 'event_update.html', context)
 
 def events_list(request):
     if request.user.is_anonymous:
