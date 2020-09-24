@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.mail import send_mail
+
 
 from .forms import UserSignup, UserLogin, EventForm, BookEventForm, ProfileUpdate
 from .models import Event,Attendee
@@ -205,6 +207,21 @@ def book_event(request, event_id):
                 event_obj.booked_tickets += obj.reserved_tickets
                 event_obj.save()
                 obj.save()
+
+                # Email
+                subject = 'your booking is confirmed'
+                message = 'Your Booking in %s has been confirmed with %s tickets.'%(obj.event.name,obj.reserved_tickets)
+                recepient = str(obj.user.email)
+                send_mail(subject,message,'aatheen.ds@gmail.com',[recepient],fail_silently=False)
+
+                #Planner EMAIL
+                subject = 'your event has a new booking'
+                message = 'Your Event %s has a new booking by %s for %s people.'%(obj.event.name,obj.user.username,obj.reserved_tickets)
+                recepient = str(event_obj.planner.email)
+                send_mail(subject,message,'aatheen.ds@gmail.com',[recepient],fail_silently=False)
+
+
+
                 return redirect('dashboard')
             else:
                 messages.error(request, "Event is fully booked.")

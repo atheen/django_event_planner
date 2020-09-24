@@ -17,6 +17,11 @@ class AttendeeSerializer(serializers.ModelSerializer):
     def get_event(self,obj):
         return "%s - (%s)"%(obj.event.name,obj.event.date)
 
+class AttendeeListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendee
+        fields = ['user']
+
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
