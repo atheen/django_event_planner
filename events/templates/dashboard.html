@@ -1,14 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+
+<div class="slider_area slider_bg_1">
+		<div class="slider_text">
+			<div class="container">
+				<div class="position_relv">
+					<div class="row">
+						<div class="col-xl-8 col-lg-8">
+							<div class="title_text title_text2 ">
+								<h3>WELCOME<br><small>{{request.user.username}}</small></h3>
+                <a href="{% url 'profile-update' %}" class="boxed-btn-white">Update Profile</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 <header class="masthead text-center text-white">
   <div class="masthead-content">
     <div class="container">
-      <!-- PLANNED EVENTS TABLE -->
+      <!-- PROFILE -->
       <br>
-      <h2 class="masthead-subheading mb-0">PROFILE</h2>
-      <a href="{% url 'profile-update' %}" class="btn btn-light btn-xl rounded-pill mt-2">Update Profile</a>
-      <table class="table mt-2">
+      <h2 class="text-center mb-30 mt-5" style="font-size:60px">PROFILE</h2>
+      <table class="table mt-2 text-dark">
         <thead>
           <tr>
             <th scope="col">USERNAME</th>
@@ -30,8 +50,8 @@
 
       <!-- PLANNED EVENTS TABLE -->
       <br>
-      <h2 class="masthead-subheading mb-0">PLANNED EVENTS</h2>
-        <table class="table">
+      <h2 class="text-center mb-30" style="font-size:60px">PLANNED EVENTS</h2>
+        <table class="table text-dark">
           <thead>
             <tr>
               <th scope="col">EVENT</th>
@@ -52,7 +72,7 @@
                 <td>{{event.booked_tickets}}</td>
                 <td>{{event.available_tickets}}</td>
                 <td>{{event.planner}}</td>
-                <td><a href="{% url 'event-details' event.id %}" class="btn btn-light btn-block rounded-pill">Details</a></td>
+                <td><a href="{% url 'event-details' event.id %}" class="genric-btn success-border circle">Details</a></td>
               </tr>
             {% endfor %}
           </tbody>
@@ -61,8 +81,8 @@
         <!-- ATTENDED EVENTS TABLE -->
         <hr>
         <br>
-        <h2 class="masthead-subheading mb-0">ATTENDED EVENTS</h2>
-          <table class="table">
+        <h2 class="text-center mb-30" style="font-size:60px">ATTENDED EVENTS</h2>
+          <table class="table text-dark">
             <thead>
               <tr>
                 <th scope="col">EVENT</th>

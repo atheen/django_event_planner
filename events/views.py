@@ -127,11 +127,12 @@ def event_details(request,event_id):
     user_obj = event_obj.planner
     if request.user != user_obj:
         messages.error(request, "You have no access.")
+        return redirect('home')
     else:
         context = {
             "event": event_obj
         }
-        return render(request,'event_details.html',context)
+    return render(request,'event_details.html',context)
 
 def event_update(request,event_id):
     if request.user.is_anonymous:

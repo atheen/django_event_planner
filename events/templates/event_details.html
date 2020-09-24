@@ -1,42 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<header class="masthead text-center text-white">
-  <div class="masthead-content">
-    <div class="container">
-      {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
-      {% else %}
-        <!-- EVENT DETAILS -->
-        <h2 class="masthead-subheading mb-0">{{event.name}}</h2>
-        <hr>
-        <h5 class="mb-0">{{event.description}}</h5>
-        <h5 class="mb-0">{{event.date}}</h5>
-        <h5 class="mb-0">Number Of Available Tickets: {{event.tickets}}</h5>
-        <h5 class="mb-0">Total Capacity: {{event.tickets}}</h5>
-        <a href="{% url 'event-update' event.id %}" class="btn btn-light btn-xl rounded-pill mt-1">UPDATE</a>
 
 
-        <!-- ATTENDEES TABLE -->
-        <h2 class="mt-5 mb-0">EVENT ATTENDEES</h2>
-          <table class="table">
-            <thead>
+
+<div class="slider_area slider_bg_1">
+		<div class="slider_text">
+			<div class="container">
+				<div class="position_relv">
+					<div class="row">
+						<div class="col-xl-8 col-lg-8">
+							<div class="title_text title_text2">
+
+                    <!-- EVENT DETAILS -->
+                    <h2 class="masthead-subheading text-white">{{event.name}}</h2>
+                    <h5 class="text-white">{{event.description}}</h5>
+                    <div class="single_date">
+							        <i class="ti-calendar"></i>
+							        <span>{{event.date}}</span>
+						        </div>
+                    <!-- <h5 class="text-white">{{event.date}}</h5> -->
+                    <h5 class="text-white">Available Tickets: {{event.tickets}}</h5>
+                    <h5 class="text-white">Total Capacity: {{event.tickets}}</h5>
+                    <a href="{% url 'event-update' event.id %}" class="genric-btn primary circle">UPDATE</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+      <!-- ATTENDEES TABLE -->
+      <h2 class="mt-5 mb-0 text-white text-center">EVENT ATTENDEES</h2>
+        <table class="table text-white text-center">
+          <thead>
+            <tr>
+              <th scope="col">NAME</th>
+              <th scope="col">TICKETS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for attendee in event.attendees.all %}
               <tr>
-                <th scope="col">NAME</th>
-                <th scope="col">TICKETS</th>
+                <th scope="row">{{attendee.user.username}}</th>
+                <td>{{attendee.reserved_tickets}}</td>
               </tr>
-            </thead>
-            <tbody>
-              {% for attendee in event.attendees.all %}
-                <tr>
-                  <th scope="row">{{attendee.user.username}}</th>
-                  <td>{{attendee.reserved_tickets}}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-      {% endif %}
-    </div>
-  </div>
-</header>
+            {% endfor %}
+          </tbody>
+        </table>
+		</div>
+	</div>
 {% endblock %}

@@ -11,7 +11,7 @@ urlpatterns = [
 	path('event/<int:event_id>/update/', event_update, name='event-update'),
 	path('events/', events_list, name='events-list'),
 	path('events/create/', create_event, name='create-event'),
-	path('events/<int:event_id>/book/', book_event, name='book-event'),
+	path('event/<int:event_id>/book/', book_event, name='book-event'),
 	path('profile/update/', update_profile, name='profile-update'),
 	path('profile/update/password/', change_password, name='change-password')
 

@@ -2,19 +2,27 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<header class="masthead text-center text-white">
-  <div class="masthead-content">
-    <div class="container">
-        <h2 class="masthead-subheading mb-0">Book {{event.name}} Tickets</h2>
-        <hr>
-
-        <br>
+<div class="slider_area slider_bg_1">
+		<div class="slider_text">
+			<div class="container">
+				<div class="position_relv">
+					<div class="row">
+						<div class="col-xl-8 col-lg-8">
+							<div class="title_text title_text2">
+								<h3>BOOK FOR<br></h3>
+                <h3><small>{{event.name}}</small></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+      <div class="mt-2 mr-3 ml-3">
         <form action="{% url 'book-event' event.id %}" method="POST">
           {% csrf_token %}
           {{form|crispy}}
-          <input type="submit" vlaue="BOOK" class="btn btn-primary btn-xl rounded-pill mt-5">
+          <input type="submit" vlaue="BOOK" class="genric-btn btn-block success circle mt-5">
         </form>
-    </div>
-  </div>
-</header>
+      </div>
+		</div>
+	</div>
 {% endblock %}

@@ -1,24 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<header class="masthead text-center text-white">
-  <div class="masthead-content">
-    <div class="container">
-      <h1 class="masthead-heading mb-0">All the events,</h1>
-      <h2 class="masthead-subheading mb-0">You could ever want...</h2>
-      {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
-      {% else %}
-        <a href="{% url 'events-list' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
-      {% endif %}
+
+
+  <div class="slider_area slider_bg_1">
+    <div class="slider_text">
+        <div class="container">
+            <div class="position_relv">
+                <h1 class="opcity_text d-none d-lg-block">EVENTS</h1>
+                <div class="row">
+                    <div class="col-xl-9">
+                        <div class="title_text">
+                            <h3>All The Events, <br>
+                                You Could Ever Want... </h3>
+                            {% if request.user.is_anonymous %}
+                              <a href="{% url 'signup' %}" class="boxed-btn-white">Sign up to find events!</a>
+                            {% else %}
+                              <a href="{% url 'events-list' %}" class="boxed-btn-white">Find events!</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
-  <div class="bg-circle-1 bg-circle"></div>
-  <div class="bg-circle-2 bg-circle"></div>
-  <div class="bg-circle-3 bg-circle"></div>
-  <div class="bg-circle-4 bg-circle"></div>
-</header>
 
-
-
-{% endblock %}
+{% endblock content %}
